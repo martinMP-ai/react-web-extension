@@ -1,0 +1,27 @@
+name: Mirror push to martinMP-ai/reac-web-extension
+
+on:
+  push:
+    branches:
+      - '**'
+  delete:
+    branches:
+      - '**'
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to mirror repository
+        env:
+          TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
+        run: |
+          git remote add mirror "https://x-access-token:${TARGET_REPO_TOKEN}@github.com/martinMP-ai/reac-web-extension.git"
+          git push mirror --mirror
